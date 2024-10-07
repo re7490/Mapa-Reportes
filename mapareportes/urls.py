@@ -21,5 +21,7 @@ from reporte import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('signup/', views.signup, name='signup')
+    path('signup/', views.signup, name='signup'),
+    path('crear_reporte/', views.crear_reporte, name='crear_reporte'),
+    path('reportes/', views.reportes, name='reportes')
 ]

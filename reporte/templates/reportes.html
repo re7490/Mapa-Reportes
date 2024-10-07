@@ -1,0 +1,16 @@
+{% extends 'home.html' %}
+
+{% block content %}
+
+<h1>Reportes</h1>
+
+<ul>
+    {% for r in r %}
+    <li>
+        <h1>{{r.titulo}}</h1>
+        <p>{{r.descripcion}}</p>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'home.html' %}
+
+{% block content%}
+
+<h1>Reportar problema</h1>
+
+<form action="/crear_reporte/" method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+
+    <button>
+        Reportar
+    </button>
+
+</form>
+
+{% endblock %}

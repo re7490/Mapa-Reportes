@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse
+from .forms import reporteForm
+from .models import reporte
 
-# Create your views here.
 def home(request):
     return render(request, 'home.html')
 
@@ -22,3 +23,17 @@ def signup(request):
             except:
                 return HttpResponse('El usuario ya existe')
         return HttpResponse('contraseña no coincide')
+
+def reportes(request):
+    report = reporte.objects.all()
+    return render(request, 'reportes.html', {'r': report})
+
+def crear_reporte(request):
+
+    if request.method == 'GET':
+        return render(request, 'crear_reporte.html', {
+            'form': reporteForm})
+    else:
+        reporte = reporteForm(request.POST)
+        reporte.save()
+        return redirect('reportes')
