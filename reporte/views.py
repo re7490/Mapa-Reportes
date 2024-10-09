@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse
@@ -36,4 +36,21 @@ def crear_reporte(request):
     else:
         reporte = reporteForm(request.POST)
         reporte.save()
+        return redirect('reportes')
+
+def reporte_(request, id):
+    if request.method == 'GET':
+        re = get_object_or_404(reporte, pk=id)
+        form = reporteForm(instance=re)
+        return render(request, 'reporte_.html', {'r': re, 'form': form})
+    else:
+        re = get_object_or_404(reporte, pk=id)
+        form = reporteForm(request.POST, instance=re)
+        form.save()
+        return redirect('reportes')
+
+def borrar_reporte(request, id):
+    re = get_object_or_404(reporte, pk=id)
+    if request.method == "POST":
+        re.delete()
         return redirect('reportes')

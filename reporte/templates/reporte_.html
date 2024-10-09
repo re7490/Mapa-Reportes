@@ -1,0 +1,25 @@
+{% extends 'home.html' %}
+
+{% block content%}
+
+<h1>{{r.titulo}}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+
+    <button>
+        Actualizar
+    </button>
+
+</form>
+
+<form action="{% url 'borrar_reporte' r.id %}" method="POST">
+    {% csrf_token %}
+
+    <button>
+        Borrar
+    </button>
+</form>
+
+{% endblock %}
