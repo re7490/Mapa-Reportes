@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa BNC</title>
+    <style>
+        .mapa-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 100%;
+            height: 100%;
+        }
+        .mapa-imagen {
+            width: 75%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>{% block header%}Mapa{% endblock %}</h1>
+    <div class="mapa-container">
+        {% block content%}{% endblock %}
+    </div>
+</body>
+</html>

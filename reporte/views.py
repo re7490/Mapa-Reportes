@@ -54,3 +54,12 @@ def borrar_reporte(request, id):
     if request.method == "POST":
         re.delete()
         return redirect('reportes')
+
+def mapa_piso1(request):
+    return render(request,'mapa/piso1.html')
+def mapa_piso2(request):
+    return render(request,'mapa/piso2.html')
+def mapa_piso4(request):
+    return render(request,'mapa/piso4.html')
+def mapa_piso0(request):
+    return render(request,'mapa/piso0.html')
