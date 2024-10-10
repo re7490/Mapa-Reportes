@@ -62,4 +62,4 @@ def mapa_piso2(request):
 def mapa_piso4(request):
     return render(request,'mapa/piso4.html')
 def mapa_piso0(request):
-    return render(request,'mapa/piso0.html')
+    return render(request,'mapa/piso-1.html')
