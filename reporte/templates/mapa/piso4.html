@@ -3,4 +3,9 @@
 {% block header%}Mapa del piso 4{% endblock %}
 {% block content%}
     <img src="{% static 'reporte/imagenes/4to_piso.jpg' %}" class="mapa-imagen" alt="Mapa piso 4">
-{% endblock %}
+    <div class="button">
+        <a href="{% url 'piso-1' %}" class?"button">Piso -1</a>
+        <a href="{% url 'piso1' %}" class?"button">Piso 1</a>
+        <a href="{% url 'piso2' %}" class?"button">Piso 2</a>
+    </div>
+    {% endblock %}
