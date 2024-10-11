@@ -1,12 +1,12 @@
 {% extends "mapa/basepiso.html" %}
 {% load static %}
-{% block header%}Mapa del piso 4{% endblock %}
+{% block header%}Mapa del piso 3{% endblock %}
 {% block content%}
-    <img src="{% static 'reporte/imagenes/4to_piso.jpg' %}" class="mapa-imagen" alt="Mapa piso 4">
+    <img src="{% static 'reporte/imagenes/3er_piso.jpg' %}" class="mapa-imagen" alt="Mapa piso 3">
     <div class="button">
         <a href="{% url 'piso-1' %}" class?"button">Piso -1</a>
         <a href="{% url 'piso1' %}" class?"button">Piso 1</a>
         <a href="{% url 'piso2' %}" class?"button">Piso 2</a>
-        <a href="{% url 'piso3' %}" class?"button">Piso 3</a>
+        <a href="{% url 'piso4' %}" class?"button">Piso 4</a>
     </div>
-    {% endblock %}
+{% endblock %}
