@@ -25,7 +25,14 @@ def signup(request):
         return HttpResponse('contraseña no coincide')
 
 def reportes(request):
-    report = reporte.objects.all()
+    gravedad=request.GET.get('gravedad')
+    urgencia=request.GET.get('urgencia')
+
+    if gravedad:
+        report= report.filter(gravedad=gravedad)
+    if urgencia:
+        report = report.filter(urgencia=urgencia)
+    report = reporte.objects.all().order_by('-gravedad','-urgencia')
     return render(request, 'reportes.html', {'r': report})
 
 def crear_reporte(request):
