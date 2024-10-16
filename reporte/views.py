@@ -1,28 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.http import HttpResponse
-from .forms import reporteForm
+from .forms import reporteForm, Registroform
 from .models import reporte
+from django.contrib.auth import login
+from django.contrib import messages
+
+
 
 def home(request):
     return render(request, 'home.html')
 
-def signup(request):
-    
-    if request.method =='GET':
-        return render(request, 'signup.html',{
-            'form': UserCreationForm
-        })
-    else:
-        if request.POST['password1'] == request.POST['password2']:
-            try:
-                usuario = User.objects.create_user(username=request.POST['username'], password=request.POST['password2'])
-                usuario.save()
-                return HttpResponse('Usuario creado :)')
-            except:
-                return HttpResponse('El usuario ya existe')
-        return HttpResponse('contraseña no coincide')
 
 def reportes(request):
     gravedad=request.GET.get('gravedad')
@@ -72,3 +58,17 @@ def mapa_piso4(request):
     return render(request,'mapa/piso4.html')
 def mapa_piso0(request):
     return render(request,'mapa/piso-1.html')
+
+def registrar(request):
+    if request.method=='POST':
+        form= Registroform(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Usuario creado exitosamente')
+            return redirect('login')
+    else:
+        form=Registroform()
+    return render(request,'registro.html',{'form':form})
+
+def postlogin(request):
+    return render(request, 'postlogin.html')
