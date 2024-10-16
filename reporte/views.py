@@ -65,7 +65,7 @@ def registrar(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Usuario creado exitosamente')
-            return redirect('login')
+            return redirect('postlogin')
     else:
         form=Registroform()
     return render(request,'registro.html',{'form':form})
