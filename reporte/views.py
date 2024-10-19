@@ -42,6 +42,13 @@ def reporte_(request, id):
         form.save()
         return redirect('reportes')
 
+def completar_reporte(request, id):
+    re = get_object_or_404(reporte, pk=id)
+    if request.method == "POST":
+        re.completado = True
+        re.save()
+        return redirect('reportes')
+
 def borrar_reporte(request, id):
     re = get_object_or_404(reporte, pk=id)
     if request.method == "POST":

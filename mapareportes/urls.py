@@ -27,6 +27,7 @@ urlpatterns = [
     path('reportes/', views.reportes, name='reportes'),
     path('reportes/<int:id>/', views.reporte_, name='reporte_'),
     path('reportes/<int:id>/borrar_reporte', views.borrar_reporte, name='borrar_reporte'),
+    path('reportes/<int:id>/completar_reporte', views.completar_reporte, name='completar_reporte'),
     path('piso-1/', views.mapa_piso0, name='piso-1'),
     path('piso1/', views.mapa_piso1, name='piso1'),
     path('piso2/', views.mapa_piso2, name='piso2'),        

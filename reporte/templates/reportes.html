@@ -12,12 +12,13 @@
     <h1>Reportes</h1>
     <ul>
         {% for r in r %}
+        {% if r.completado == False %}
         <li>
             <a href="{{r.id}}">
                 <h1>{{r.titulo}}</h1>
             </a>
         </li>
-        
+        {% endif %}
         {% endfor %}
     </ul>
 </body>
