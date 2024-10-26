@@ -1,11 +1,63 @@
 {% extends "mapa/basepiso.html" %}
 {% load static %}
-{% block header%}Mapa del piso -1{% endblock %}
-{% block content%}
-    <img src="{% static 'reporte/imagenes/piso-1.jpg' %}" class="mapa-imagen" alt="Mapa piso -1">
+{% block header %}Mapa del piso -1{% endblock %}
+{% block content %}
+    <img src="{% static 'reporte/imagenes/piso-1.jpg' %}" class="mapa-imagen" alt="Mapa piso -1" id="map-image">
     <div class="button">
-        <a href="{% url 'piso1' %}" class?"button">Piso 1</a>
-        <a href="{% url 'piso2' %}" class?"button">Piso 2</a>
-
+        <a href="{% url 'piso1' %}" class="button">Piso 1</a>
+        <a href="{% url 'piso2' %}" class="button">Piso 2</a>
     </div>
+    
+    <!-- Pop-up -->
+    <div id="popup" style="display:none;">
+        <div style="background: white; border: 1px solid black; padding: 10px; position: absolute;">
+            <h2>Reportar problema</h2>
+            <form action="{% url 'crear_reporte' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="pin_location" id="pin_location">
+                {{ form.as_p }}
+                <button type="submit">Reportar</button>
+            </form>
+            <button onclick="closePopup()">Cerrar</button>
+        </div>
+    </div>
+
+    <style>
+        /* Estilo para el pin */
+        .pin {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+
+    <script>
+        const mapImage = document.getElementById("map-image");
+        const popup = document.getElementById("popup");
+        const pinLocationInput = document.getElementById("pin_location");
+
+        mapImage.addEventListener("click", function(event) {
+            const rect = mapImage.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            // Mostrar pop-up
+            popup.style.display = "block";
+            pinLocationInput.value = `${x},${y}`; // Guardar ubicación del pin
+            
+            // Crear el pin
+            const pin = document.createElement("div");
+            pin.className = "pin";
+            pin.style.left = `${x}px`;
+            pin.style.top = `${y}px`;
+            mapImage.parentElement.appendChild(pin);
+        });
+
+        function closePopup() {
+            popup.style.display = "none";
+        }
+    </script>
 {% endblock %}

@@ -2,11 +2,48 @@
 {% load static %}
 {% block header%}Mapa del piso 1{% endblock %}
 {% block content%}
-    <img src="{% static 'reporte/imagenes/1er_piso.jpg' %}" class="mapa-imagen" alt="Mapa piso 1">
+    <img src="{% static 'reporte/imagenes/1er_piso.jpg' %}" class="mapa-imagen" alt="Mapa piso 1" id="mapa1">
     <div class="button">
-        <a href="{% url 'piso-1' %}" class?"button">Piso -1</a>
-        <a href="{% url 'piso2' %}" class?"button">Piso 2</a>
+        <a href="{% url 'piso-1' %}" class="button">Piso -1</a>
+        <a href="{% url 'piso2' %}" class="button">Piso 2</a>
+    </div>
 
+    <script>
+        document.getElementById('mapa1').onclick = function(event) {
+            var pinX = event.clientX; // Obtener la posición X del clic
+            var pinY = event.clientY; // Obtener la posición Y del clic
+
+            // Aquí puedes abrir un pop-up o un modal
+            openReportPopup(pinX, pinY);
+        };
+
+        function openReportPopup(pinX, pinY) {
+            // Abre un modal o pop-up aquí
+            // Puedes usar un div oculto y mostrarlo aquí
+            var modal = document.getElementById('reportModal');
+            modal.style.display = "block";
+
+            // Aquí puedes guardar la ubicación para luego enviarla al backend
+            document.getElementById('pin_location').value = pinX + ',' + pinY; // Almacena la posición
+        }
+
+        // Función para cerrar el modal
+        function closeModal() {
+            document.getElementById('reportModal').style.display = "none";
+        }
+    </script>
+
+    <!-- Modal para el reporte -->
+    <div id="reportModal" style="display:none;">
+        <h1>Reportar problema</h1>
+        <form action="{% url 'crear_reporte' %}" method="POST">
+            {% csrf_token %}
+            <input type="text" name="titulo" placeholder="Título" required>
+            <textarea name="contenido" placeholder="Descripción" required></textarea>
+            <input type="hidden" id="pin_location" name="pin_location">
+            <button type="submit">Reportar</button>
+            <button type="button" onclick="closeModal()">Cerrar</button>
+        </form>
     </div>
 {% endblock %}
-       
+

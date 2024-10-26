@@ -4,7 +4,10 @@ class reporte(models.Model):
     titulo = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True)
     fecha = models.DateTimeField(auto_now_add=True)
+    pin_location = models.CharField(max_length=50, null=True, blank=True)  # Campo para almacenar la ubicación del pin
     completado = models.BooleanField(default=False)
+    def __str__(self):
+        return self.titulo
     Gravedad_eleccion= [
         (1,'Baja'),
         (2, 'Media'),
