@@ -1,20 +1,38 @@
-<nav>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista Usuario</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li>
+                <a href="/crear_reporte">Crear reporte</a>
+            </li>
+            <li>
+                <a href="{% url 'piso-1' %}" class="button">Ir a piso -1</a>
+            </li>
+            <li>
+                <a href="{% url 'piso1' %}" class="button">Ir a piso 1</a>
+            </li>
+            <li>
+                <a href="{% url 'piso2' %}" class="button">Ir a piso 2</a>
+            </li>
+        </ul>
+    </nav>
+    <h1>Lista de reportes</h1>
     <ul>
-        <li>
-            <a href="/crear_reporte">crear reporte</a>
-        </li>
-        <li>
-            <a href="/reportes">lista de reportes</a>
-        </li>
-        <li>
-            <a href="{% url 'piso-1' %}" class?"button">Ir a piso -1</a>
-        </li>
-        <li>
-            <a href="{% url 'piso1' %}" class?"button">Ir a piso 1</a>
-        </li>
-        <li>
-            <a href="{% url 'piso2' %}" class?"button">Ir a piso 2</a>
-        </li>
-
+        {% for r in r %}
+            {% if r.completado == False %}
+                <li>
+                    <a href="{% url 'reporte_' r.id %}">
+                        <h1>{{ r.titulo }}</h1>
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
     </ul>
-</nav>
+</body>
+</html>

@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404 
 from .forms import reporteForm, Registroform
 from .models import reporte
-from django.contrib.auth import login
 from django.contrib import messages
 
 def home(request):
@@ -32,8 +31,9 @@ def crear_reporte(request):
             # Captura la ubicación del pin
             pin_location = request.POST.get('pin_location')
             nuevo_reporte.pin_location = pin_location  # Asigna la ubicación del pin al reporte
-
+            
             nuevo_reporte.save()  # Guarda el reporte en la base de datos
+            messages.success(request, "Reporte enviado :)")
             return redirect('reportes')
 
 def reporte_(request, id):
