@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import reporteForm, Registroform
 from .models import reporte
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     return render(request, 'home.html')
@@ -34,6 +35,9 @@ def crear_reporte(request):
             
             nuevo_reporte.save()  # Guarda el reporte en la base de datos
             messages.success(request, "Reporte enviado :)")
+            if request.user.is_authenticated: # Verifica si un usuario esta iniciado
+                request.session['nuevo_reporte']=True
+                return redirect('postlogin')  # Manda notificacion a los usuarios/empleados
             return redirect('reportes')
 
 def reporte_(request, id):
@@ -80,5 +84,8 @@ def registrar(request):
         form = Registroform()
     return render(request, 'registro.html', {'form': form})
 
+@login_required
 def postlogin(request):
-    return render(request, 'postlogin.html')
+    nuevo_reporte=request.session.pop('nuevo_reporte',False) # Ve si hay nuevo reporte
+    reportes = reporte.objects.filter(completado=False).order_by('-id') #para mostrar lista de reportes
+    return render(request, 'postlogin.html', {'r': reportes, 'nuevo_reporte':nuevo_reporte})

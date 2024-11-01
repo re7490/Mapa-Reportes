@@ -6,7 +6,11 @@
     <div class="button">
         <a href="{% url 'piso1' %}" class="button">Piso 1</a>
         <a href="{% url 'piso2' %}" class="button">Piso 2</a>
-        <a href="{% url 'home' %}" class="button">Volver</a>        
+        {% if user.is_authenticated %}
+            <a href="{% url 'postlogin' %}" class="button">Volver</a>
+        {% else %}
+            <a href="{% url 'home' %}" class="button">Volver</a>
+        {% endif %}
     </div>
     
     <!-- Pop-up -->

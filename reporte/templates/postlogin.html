@@ -4,8 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vista Usuario</title>
+    <style>
+        .mensaje-emergente {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: aquamarine;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
+    {%if nuevo_reporte%}
+    <div id="mensajeEmergente" class="mensaje-emergente">
+        ¡Se ha hecho un nuevo reporte!
+        <button onclick="ocultarMensaje()">Cerrar</button>
+    </div>
+    {%endif%}
     <nav>
         <ul>
             <li>
@@ -34,5 +53,10 @@
             {% endif %}
         {% endfor %}
     </ul>
+    <script>
+        function ocultarMensaje() {
+            document.getElementById('mensajeEmergente').style.display='none';
+        }
+    </script> 
 </body>
 </html>
