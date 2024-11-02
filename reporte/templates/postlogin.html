@@ -39,6 +39,14 @@
             <li>
                 <a href="{% url 'piso2' %}" class="button">Ir a piso 2</a>
             </li>
+            <li>
+            <a href="#" onclick="document.getElementById('logout-form').submit(); return false;">
+                Cerrar Sesión
+            </a>
+            <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                {% csrf_token %}
+            </form>
+            </li>
         </ul>
     </nav>
     <h1>Lista de reportes</h1>
