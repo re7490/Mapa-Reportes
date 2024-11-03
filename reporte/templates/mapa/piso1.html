@@ -82,6 +82,8 @@
             pin.className = "pin";
             pin.style.left = `${x}px`;
             pin.style.top = `${y}px`;
+
+            mapImage.parentElement.querySelectorAll('.pin').forEach(p => p.remove());  //deja el pin + reciente
             mapImage.parentElement.appendChild(pin);
         });
 
