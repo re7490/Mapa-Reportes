@@ -3,6 +3,7 @@ from .forms import reporteForm, Registroform
 from .models import reporte
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+import json
 
 def home(request):
     return render(request, 'home.html')
@@ -33,6 +34,9 @@ def crear_reporte(request):
             pin_location = request.POST.get('pin_location')
             nuevo_reporte.pin_location = pin_location  # Asigna la ubicación del pin al reporte
             
+            nuevo_reporte.x=float(request.POST.get('x'))
+            nuevo_reporte.y=float(request.POST.get('y'))
+
             nuevo_reporte.save()  # Guarda el reporte en la base de datos
             messages.success(request, "Reporte enviado :)")
             if request.user.is_authenticated: # Verifica si un usuario esta iniciado
@@ -64,14 +68,39 @@ def borrar_reporte(request, id):
         re.delete()
         return redirect('reportes')
 
+
+def mapa_piso0(request): #piso -1
+    reportes= reporte.objects.filter(completado=False, piso=-1)
+    reportes_data = [{
+        'titulo': reporte.titulo,
+        'descripcion': reporte.descripcion,
+        'x': reporte.x,
+        'y': reporte.y
+    } for reporte in reportes]
+    context= {"reportes":json.dumps(reportes_data)}
+    return render(request, 'mapa/piso-1.html',context)
+
 def mapa_piso1(request):
-    return render(request, 'mapa/piso1.html')
+    reportes= reporte.objects.filter(completado=False, piso=1)
+    reportes_data = [{
+        'titulo': reporte.titulo,
+        'descripcion': reporte.descripcion,
+        'x': reporte.x,
+        'y': reporte.y
+    } for reporte in reportes]
+    context= {"reportes":json.dumps(reportes_data)}
+    return render(request, 'mapa/piso1.html',context)
 
 def mapa_piso2(request):
-    return render(request, 'mapa/piso2.html')
-
-def mapa_piso0(request):
-    return render(request, 'mapa/piso-1.html')
+    reportes= reporte.objects.filter(completado=False, piso=2)
+    reportes_data = [{
+        'titulo': reporte.titulo,
+        'descripcion': reporte.descripcion,
+        'x': reporte.x,
+        'y': reporte.y
+    } for reporte in reportes]
+    context= {"reportes":json.dumps(reportes_data)}
+    return render(request, 'mapa/piso2.html',context)
 
 def registrar(request):
     if request.method == 'POST':

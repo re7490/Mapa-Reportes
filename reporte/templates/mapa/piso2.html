@@ -44,6 +44,8 @@
                     <option value=3>Critica</option>
                 </select>
                 <br>
+                <input type="hidden" name="x" id="x" value="">
+                <input type="hidden" name="y" id="y" value="">
 
                 <button type="submit">Reportar</button>
             </form>
@@ -67,7 +69,16 @@
         const mapImage = document.getElementById("mapa2");
         const popup = document.getElementById("popup");
         const pinLocationInput = document.getElementById("pin_location");
-
+        const reporte = {{ reportes|safe }};
+        
+        reporte.forEach(reporte => {
+            const pin=document.createElement("div");
+            pin.className="pin";
+            pin.style.left=`${reporte.x}px`;
+            pin.style.top=`${reporte.y}px`;
+            mapImage.parentElement.appendChild(pin);
+        })
+        
         mapImage.addEventListener("click", function(event) {
             const rect = mapImage.getBoundingClientRect();
             const x = event.clientX - rect.left;
@@ -77,6 +88,9 @@
             popup.style.display = "block";
             pinLocationInput.value = `${x},${y}`; // Guardar ubicación del pin
             
+            document.getElementById("x").value = x;
+            document.getElementById("y").value = y;
+
             // Crear el pin
             const pin = document.createElement("div");
             pin.className = "pin";

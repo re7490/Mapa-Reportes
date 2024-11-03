@@ -20,3 +20,6 @@ class reporte(models.Model):
     ]
     gravedad =models.IntegerField(choices=Gravedad_eleccion, default=1)
     urgencia =models.IntegerField(choices=Urgencia_eleccion, default=1)
+    x= models.IntegerField()
+    y= models.IntegerField()
+    piso=models.IntegerField(default=-1)

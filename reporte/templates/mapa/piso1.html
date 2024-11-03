@@ -1,6 +1,6 @@
 {% extends "mapa/basepiso.html" %}
 {% load static %}
-{% block header %}Mapa del piso -1{% endblock %}
+{% block header %}Mapa del piso 1{% endblock %}
 {% block content %}
     <img src="{% static 'reporte/imagenes/1er_piso.jpg' %}" class="mapa-imagen" alt="Mapa piso 1" id="mapa1">
     <div class="button">
@@ -44,6 +44,8 @@
                     <option value=3>Critica</option>
                 </select>
                 <br>
+                <input type="hidden" name="x" id="x" value="">
+                <input type="hidden" name="y" id="y" value="">
 
                 <button type="submit">Reportar</button>
             </form>
@@ -67,6 +69,15 @@
         const mapImage = document.getElementById("mapa1");
         const popup = document.getElementById("popup");
         const pinLocationInput = document.getElementById("pin_location");
+        const reporte = {{ reportes|safe }};
+
+        reporte.forEach(reporte => {
+            const pin=document.createElement("div");
+            pin.className="pin";
+            pin.style.left=`${reporte.x}px`;
+            pin.style.top=`${reporte.y}px`;
+            mapImage.parentElement.appendChild(pin);
+        })
 
         mapImage.addEventListener("click", function(event) {
             const rect = mapImage.getBoundingClientRect();
@@ -77,6 +88,9 @@
             popup.style.display = "block";
             pinLocationInput.value = `${x},${y}`; // Guardar ubicación del pin
             
+            document.getElementById("x").value = x;
+            document.getElementById("y").value = y;
+
             // Crear el pin
             const pin = document.createElement("div");
             pin.className = "pin";
