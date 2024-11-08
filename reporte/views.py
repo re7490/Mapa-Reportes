@@ -4,6 +4,7 @@ from .models import reporte
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import json
+from django.utils import timezone
 
 def home(request):
     return render(request, 'home.html')
@@ -55,6 +56,8 @@ def reporte_(request, id):
         form.save()
         return redirect('reportes')
 
+#SOLO usuarios podran brorrar o completar el reporte
+@login_required
 def completar_reporte(request, id):
     re = get_object_or_404(reporte, pk=id)
     if request.method == "POST":
@@ -62,6 +65,7 @@ def completar_reporte(request, id):
         re.save()
         return redirect('reportes')
 
+@login_required
 def borrar_reporte(request, id):
     re = get_object_or_404(reporte, pk=id)
     if request.method == "POST":
@@ -102,6 +106,8 @@ def mapa_piso2(request):
     context= {"reportes":json.dumps(reportes_data)}
     return render(request, 'mapa/piso2.html',context)
 
+
+#SISTEMA DE CUENTAS
 def registrar(request):
     if request.method == 'POST':
         form = Registroform(request.POST)
@@ -113,8 +119,14 @@ def registrar(request):
         form = Registroform()
     return render(request, 'registro.html', {'form': form})
 
+#Vista/"home" de usuario
 @login_required
 def postlogin(request):
+    usuario=request.user
+    ultima_conexion=request.user.last_login or timezone.now()
+    reportes_nuevos=reporte.objects.filter(fecha__gt=ultima_conexion).count()
+    reportes_completados=reporte.objects.filter(completado=True,fecha_completado__gt=ultima_conexion).count()
     nuevo_reporte=request.session.pop('nuevo_reporte',False) # Ve si hay nuevo reporte
     reportes = reporte.objects.filter(completado=False).order_by('-id') #para mostrar lista de reportes
-    return render(request, 'postlogin.html', {'r': reportes, 'nuevo_reporte':nuevo_reporte})
+    context={'usuario':usuario,'reportes_nuevos':reportes_nuevos,'reportes_completados':reportes_completados,'r':reportes,'nuevo_reporte':nuevo_reporte}
+    return render(request, 'postlogin.html', context)

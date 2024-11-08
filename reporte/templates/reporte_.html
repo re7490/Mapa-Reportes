@@ -14,20 +14,23 @@
 
 </form>
 
-<form action="{% url 'completar_reporte' r.id %}" method="POST">
-    {% csrf_token %}
+{% if user.is_authenticated %}
 
-    <button>
-        Completar
-    </button>
-</form>
+    <form action="{% url 'completar_reporte' r.id %}" method="POST">
+        {% csrf_token %}
 
-<form action="{% url 'borrar_reporte' r.id %}" method="POST">
-    {% csrf_token %}
+        <button>
+            Completar
+        </button>
+    </form>
 
-    <button>
-        Borrar
-    </button>
-</form>
+    <form action="{% url 'borrar_reporte' r.id %}" method="POST">
+        {% csrf_token %}
+
+        <button>
+            Borrar
+        </button>
+    </form>
+{% endif %}
 
 {% endblock %}

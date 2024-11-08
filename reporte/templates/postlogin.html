@@ -17,8 +17,18 @@
             z-index: 1000;
         }
     </style>
+    <h1>Bienvenido, {{usuario.username}}!</h1>
 </head>
 <body>
+    {%if reportes_nuevos > 0 %}
+        <p>Desde la ultima vez que te conectaste, se han realizado {{reportes_nuevos}} reportes nuevos.</p>
+    {%else%}
+        <p>No se han realizado reportes desde tu última conexión</p>
+    {%endif%}
+    {%if reportes_completados > 0 %}
+        <p>Además, {{reportes_completados}} reportes han sido completados.</p>
+    {%endif%}
+
     {%if nuevo_reporte%}
     <div id="mensajeEmergente" class="mensaje-emergente">
         ¡Se ha hecho un nuevo reporte!
@@ -49,7 +59,8 @@
             </li>
         </ul>
     </nav>
-    <h1>Lista de reportes</h1>
+
+    <h2>Reportes pendientes</h2>
     <ul>
         {% for r in r %}
             {% if r.completado == False %}

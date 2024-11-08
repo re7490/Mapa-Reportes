@@ -6,6 +6,7 @@ class reporte(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
     pin_location = models.CharField(max_length=50, null=True, blank=True)  # Campo para almacenar la ubicación del pin
     completado = models.BooleanField(default=False)
+    fecha_completado=models.DateTimeField(null=True,blank=True)
     def __str__(self):
         return self.titulo
     Gravedad_eleccion= [
