@@ -12,4 +12,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('postlogin/', views.postlogin,name='postlogin'),
     path('crear_reporte/', views.crear_reporte, name='crear_reporte'),
+    path('seleccionar_piso/', views.seleccionar_piso, name='seleccionar_piso'),
+
 ]

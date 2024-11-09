@@ -106,6 +106,11 @@ def mapa_piso2(request):
     context= {"reportes":json.dumps(reportes_data)}
     return render(request, 'mapa/piso2.html',context)
 
+def seleccionar_piso(request):
+    if request.method=='POST':
+        piso=request.POST.get('piso')
+        return redirect(f'/piso{piso}')
+    return render(request,'seleccionar_piso.html')
 
 #SISTEMA DE CUENTAS
 def registrar(request):

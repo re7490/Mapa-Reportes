@@ -29,7 +29,7 @@
         <p>Además, {{reportes_completados}} reportes han sido completados.</p>
     {%endif%}
 
-    {%if nuevo_reporte%}
+    {%if reportes_nuevos %}
     <div id="mensajeEmergente" class="mensaje-emergente">
         ¡Se ha hecho un nuevo reporte!
         <button onclick="ocultarMensaje()">Cerrar</button>
@@ -38,7 +38,7 @@
     <nav>
         <ul>
             <li>
-                <a href="/crear_reporte">Crear reporte</a>
+                <a href="/seleccionar_piso">Crear reporte</a>
             </li>
             <li>
                 <a href="{% url 'piso-1' %}" class="button">Ir a piso -1</a>

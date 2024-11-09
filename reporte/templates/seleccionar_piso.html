@@ -1,0 +1,23 @@
+{% extends 'home.html' %}
+
+{% block content%}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegir Piso</title>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <label>Selecciona el piso donde quieres hacer el reporte:</label>
+        <div class="button">
+            <a href="{% url 'piso-1' %}" class="button">Piso -1</a>
+            <a href="{% url 'piso1' %}" class="button">Piso 1</a>
+            <a href="{% url 'piso2' %}" class="button">Piso 2</a>
+    </form>
+    
+</body>
+</html>
+{% endblock %}
