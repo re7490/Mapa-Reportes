@@ -19,6 +19,7 @@
             <h2>Hacer un reporte</h2>
             <form action="{% url 'crear_reporte' %}" method="POST">
                 {% csrf_token %}
+                <input type="hidden" name="piso" value="2">
                 <input type="hidden" name="pin_location" id="pin_location">
                 
                 <label for="titulo">Título:</label>
@@ -77,7 +78,7 @@
             pin.style.left=`${reporte.x}px`;
             pin.style.top=`${reporte.y}px`;
             mapImage.parentElement.appendChild(pin);
-        })
+        });
         
         mapImage.addEventListener("click", function(event) {
             const rect = mapImage.getBoundingClientRect();

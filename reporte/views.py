@@ -37,6 +37,8 @@ def crear_reporte(request):
             
             nuevo_reporte.x=float(request.POST.get('x'))
             nuevo_reporte.y=float(request.POST.get('y'))
+            piso=request.POST.get('piso',-1)
+            nuevo_reporte.piso=int(piso)
 
             nuevo_reporte.save()  # Guarda el reporte en la base de datos
             messages.success(request, "Reporte enviado :)")

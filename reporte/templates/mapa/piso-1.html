@@ -19,6 +19,7 @@
             <h2>Hacer un reporte</h2>
             <form action="{% url 'crear_reporte' %}" method="POST">
                 {% csrf_token %}
+                <input type="hidden" name="piso" value="-1">
                 <input type="hidden" name="pin_location" id="pin_location">
                 
                 <label for="titulo">Título:</label>
@@ -49,7 +50,7 @@
 
                 <button type="submit">Reportar</button>
             </form>
-        <button onclick="closePopup()">Cerrar</button>
+            <button onclick="closePopup()">Cerrar</button>
         </div>
     </div>
 
@@ -72,12 +73,12 @@
         const reporte = {{ reportes|safe }};
 
         reporte.forEach(reporte => {
-            const pin=document.createElement("div");
-            pin.className="pin";
-            pin.style.left=`${reporte.x}px`;
-            pin.style.top=`${reporte.y}px`;
+            const pin = document.createElement("div");
+            pin.className = "pin";
+            pin.style.left = `${reporte.x}px`;
+            pin.style.top = `${reporte.y}px`;
             mapImage.parentElement.appendChild(pin);
-        })
+        });
 
         mapImage.addEventListener("click", function(event) {
             const rect = mapImage.getBoundingClientRect();
@@ -86,8 +87,7 @@
 
             // Mostrar pop-up
             popup.style.display = "block";
-            pinLocationInput.value = `${x},${y}`; // Guardar ubicación del pin
-            
+            pinLocationInput.value = `${x},${y}`;  // Guarda ubicación del pin
             document.getElementById("x").value = x;
             document.getElementById("y").value = y;
 
@@ -97,6 +97,7 @@
             pin.style.left = `${x}px`;
             pin.style.top = `${y}px`;
 
+            // Deja el pin más reciente
             mapImage.parentElement.querySelectorAll('.pin').forEach(p => p.remove());  //deja el pin + reciente
             mapImage.parentElement.appendChild(pin);
             document.getElementById("pin_location").value=`${x},${y}`
