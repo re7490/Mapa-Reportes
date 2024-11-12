@@ -124,52 +124,65 @@
         const overlay = document.getElementById("overlay");
         const xInput = document.getElementById("x");
         const yInput = document.getElementById("y");
-        
-
-        // Aseguramos que la imagen haya cargado antes de poner pin
+    
+        // Datos de reportes activos obtenidos desde el contexto Django (JSON)
+        const reportes = {{ reportes|safe }};
+    
+        // Aseguramos que la imagen haya cargado antes de poner los pines
         mapa.addEventListener("load", function() {
-            mapa.addEventListener("click", function(event) {
-                // Dimensiones reales imagen (sin escalar)
-                const naturalWidth = mapa.naturalWidth;
-                const naturalHeight = mapa.naturalHeight;
-
-                // Dimensiones imagen en pantalla
-                const rect = mapa.getBoundingClientRect();
-
-                // Coordenadas clic en imagen escalada
-                const clickX = event.clientX - rect.left;
-                const clickY = event.clientY - rect.top;
-
-                // Coordenadas clic ajustadas a dimensiones naturales
-                const x = (clickX / rect.width) * naturalWidth;
-                const y = (clickY / rect.height) * naturalHeight;
-
-                // Deja pin + reciente
-                const marcadorExistente = document.querySelector('.marcador');
-                if (marcadorExistente) marcadorExistente.remove();
-
-                // Crear y colocar el pin en lugar clicado
+            // Colocar los pines de los reportes activos en el mapa
+            reportes.forEach(reporte => {
                 const marcador = document.createElement("div");
                 marcador.className = "marcador";
+                marcador.style.left = `${(reporte.x / mapa.naturalWidth) * 100}%`;
+                marcador.style.top = `${(reporte.y / mapa.naturalHeight) * 100}%`;
+                mapa.parentElement.appendChild(marcador);
+            });
+    
+            // Evento para crear un nuevo pin al hacer clic en el mapa
+            mapa.addEventListener("click", function(event) {
+                // Dimensiones reales de la imagen (sin escalar)
+                const naturalWidth = mapa.naturalWidth;
+                const naturalHeight = mapa.naturalHeight;
+    
+                // Dimensiones de la imagen en pantalla
+                const rect = mapa.getBoundingClientRect();
+    
+                // Coordenadas clic en la imagen escalada
+                const clickX = event.clientX - rect.left;
+                const clickY = event.clientY - rect.top;
+    
+                // Ajuste de coordenadas clic a dimensiones naturales
+                const x = (clickX / rect.width) * naturalWidth;
+                const y = (clickY / rect.height) * naturalHeight;
+    
+                // Remover el pin temporal anterior si existe
+                const marcadorExistente = document.querySelector('.marcador-temporal');
+                if (marcadorExistente) marcadorExistente.remove();
+    
+                // Crear y colocar el nuevo pin temporal
+                const marcador = document.createElement("div");
+                marcador.className = "marcador marcador-temporal";
                 marcador.style.left = `${(x / naturalWidth) * 100}%`;
                 marcador.style.top = `${(y / naturalHeight) * 100}%`;
                 mapa.parentElement.appendChild(marcador);
-
-                // Guarda coordenadas en formulario
+    
+                // Guarda coordenadas en el formulario
                 xInput.value = x;
                 yInput.value = y;
-
+    
                 // Mostrar el popup y el overlay
                 popup.style.display = "block";
                 overlay.style.display = "block";
             });
         });
-
+    
         // Función para cerrar el popup
         function cerrarPopup() {
             popup.style.display = "none";
             overlay.style.display = "none";
         }
     </script>
+    
 </body>
 </html>
