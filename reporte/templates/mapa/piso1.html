@@ -1,109 +1,206 @@
-{% extends "mapa/basepiso.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Bilioteca Nacional</title>
+    <style>
+        .contenedor-general {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 1000px; /* Ajusta el ancho máximo */
+            margin: auto;
+            padding-top: 20px;
+        }
+        .mapa-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            max-width: 800px; /* Ajusta según el tamaño máximo deseado */
+            width: 80%; /* Tamaño relativo para adaptarse a pantallas */
+        }
+
+        /* Imagen del mapa */
+        .mapa-imagen {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 20px; /* Espacio entre el mapa y los enlaces */
+        }
+        .button a { 
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            width: 100px;
+        }
+        .button a:hover {
+            background-color: #0056b3;
+        }
+
+        /* Estilo del marcador */
+        .marcador {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: red;
+            border-radius: 50%;
+            transform: translate(-50%, -50%); /* Centra el marcador */
+        }
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
 {% load static %}
-{% block header %}Mapa del piso 1{% endblock %}
-{% block content %}
-    <img src="{% static 'reporte/imagenes/1er_piso.jpg' %}" class="mapa-imagen" alt="Mapa piso 1" id="mapa1">
-    <div class="button">
-        <a href="{% url 'piso-1' %}" class="button">Piso -1</a>
-        <a href="{% url 'piso2' %}" class="button">Piso 2</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'postlogin' %}" class="button">Volver</a>
-        {% else %}
-            <a href="{% url 'home' %}" class="button">Volver</a>
-        {% endif %}
-    </div>
-    
-    <!-- Pop-up -->
-    <div id="popup" style="display:none;">
-        <div style="background: white; border: 1px solid black; padding: 10px; position: absolute;">
-            <h2>Hacer un reporte</h2>
-            <form action="{% url 'crear_reporte' %}" method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="piso" value="1">
-                <input type="hidden" name="pin_location" id="pin_location">
-                
-                <label for="titulo">Título:</label>
-                <input type="text" name="titulo" id="titulo" required>
-                <br>
-
-                <label for="descripcion">Descripción:</label>
-                <textarea name="descripcion" id="descripcion" required></textarea>
-                <br>
-
-                <label for="gravedad">Gravedad:</label>
-                <select name="gravedad" id="gravedad" required>
-                    <option value=1>Baja</option>
-                    <option value=2>Media</option>
-                    <option value=3>Alta</option>
-                </select>
-                <br>
-
-                <label for="urgencia">Urgencia:</label>
-                <select name="urgencia" id="urgencia" required>
-                    <option value=1>No urgente</option>
-                    <option value=2>Urgente</option>
-                    <option value=3>Critica</option>
-                </select>
-                <br>
-                <input type="hidden" name="x" id="x" value="">
-                <input type="hidden" name="y" id="y" value="">
-
-                <button type="submit">Reportar</button>
-            </form>
-        <button onclick="closePopup()">Cerrar</button>
+<body>
+    <h1>Mapa piso 1</h1>
+    <div class="contenedor-general">
+        <div class="mapa-container">
+            <img src="{% static 'reporte/imagenes/1er_piso.jpg' %}" alt="Mapa" class="mapa-imagen" id="mapa">
+        </div>
+        <div class="button">
+            <a href="{% url 'piso-1' %}" class="button">Piso -1</a>
+            <a href="{% url 'piso2' %}" class="button">Piso 2</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'postlogin' %}" class="button">Volver</a>
+            {% else %}
+                <a href="{% url 'home' %}" class="button">Volver</a>
+            {% endif %}
         </div>
     </div>
 
-    <style>
-        /* Estilo para el pin */
-        .pin {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: red;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-        }
-    </style>
+    <div class="overlay" id="overlay"></div>
+    <!-- Pop-up -->
+    <div id="popup">
+        <h2>Hacer un reporte</h2>
+        <form action="{% url 'crear_reporte' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="piso" value="1">
+            <input type="hidden" name="pin_location" id="pin_location">
+
+            <label for="titulo">Título:</label>
+            <input type="text" name="titulo" id="titulo" required>
+            <br>
+
+            <label for="descripcion">Descripción:</label>
+            <textarea name="descripcion" id="descripcion" required></textarea>
+            <br>
+
+            <label for="gravedad">Gravedad:</label>
+            <select name="gravedad" id="gravedad" required>
+                <option value="1">Baja</option>
+                <option value="2">Media</option>
+                <option value="3">Alta</option>
+            </select>
+            <br>
+
+            <label for="urgencia">Urgencia:</label>
+            <select name="urgencia" id="urgencia" required>
+                <option value="1">No urgente</option>
+                <option value="2">Urgente</option>
+                <option value="3">Crítica</option>
+            </select>
+            <br>
+            <input type="hidden" name="x" id="x">
+            <input type="hidden" name="y" id="y">
+
+            <button type="submit">Reportar</button>
+            <button type="button" onclick="cerrarPopup()">Cerrar</button>
+        </form>
+    </div>
 
     <script>
-        const mapImage = document.getElementById("mapa1");
+        const mapa = document.getElementById("mapa");
         const popup = document.getElementById("popup");
-        const pinLocationInput = document.getElementById("pin_location");
-        const reporte = {{ reportes|safe }};
+        const overlay = document.getElementById("overlay");
+        const xInput = document.getElementById("x");
+        const yInput = document.getElementById("y");
+        const reportes = {{ reportes|safe }}; //reportes activos
+    
+        //para asegurarse q la imagen cargo antes del pin
+        mapa.addEventListener("load", function() {
+            //poner pines de reportes activos
+            reportes.forEach(reporte => {
+                const marcador = document.createElement("div");
+                marcador.className = "marcador";
+                marcador.style.left = `${(reporte.x / mapa.naturalWidth) * 100}%`;
+                marcador.style.top = `${(reporte.y / mapa.naturalHeight) * 100}%`;
+                mapa.parentElement.appendChild(marcador);
+            });
+    
+            //crea nuevo pin al hacer clic en mapa
+            mapa.addEventListener("click", function(event) {
+                const naturalWidth = mapa.naturalWidth;
+                const naturalHeight = mapa.naturalHeight; //dimensiones mapa sin escalar (original)
+    
+                //dimensiones imagen mapa en pantalla
+                const rect = mapa.getBoundingClientRect();
+                //coordenadas clic en mapa escalado
+                const clickX = event.clientX - rect.left;
+                const clickY = event.clientY - rect.top;
+    
+                //ajuste coordenadas a dimensiones originales
+                const x = (clickX / rect.width) * naturalWidth;
+                const y = (clickY / rect.height) * naturalHeight;
+    
+                // Deja el pin más reciente
+                const marcadorExistente = document.querySelector('.marcador-temporal');
+                if (marcadorExistente) marcadorExistente.remove();
+    
+                // Crear y colocar el nuevo pin temporal
+                const marcador = document.createElement("div");
+                marcador.className = "marcador marcador-temporal";
+                marcador.style.left = `${(x / naturalWidth) * 100}%`;
+                marcador.style.top = `${(y / naturalHeight) * 100}%`;
+                mapa.parentElement.appendChild(marcador);
 
-        reporte.forEach(reporte => {
-            const pin=document.createElement("div");
-            pin.className="pin";
-            pin.style.left=`${reporte.x}px`;
-            pin.style.top=`${reporte.y}px`;
-            mapImage.parentElement.appendChild(pin);
+                xInput.value = x;
+                yInput.value = y;
+    
+                // Mostrar el popup y el overlay
+                popup.style.display = "block";
+                overlay.style.display = "block";
+            });
         });
 
-        mapImage.addEventListener("click", function(event) {
-            const rect = mapImage.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-
-            // Mostrar pop-up
-            popup.style.display = "block";
-            pinLocationInput.value = `${x},${y}`; // Guardar ubicación del pin
-            
-            document.getElementById("x").value = x;
-            document.getElementById("y").value = y;
-
-            // Crear el pin
-            const pin = document.createElement("div");
-            pin.className = "pin";
-            pin.style.left = `${x}px`;
-            pin.style.top = `${y}px`;
-
-            mapImage.parentElement.querySelectorAll('.pin').forEach(p => p.remove());  //deja el pin + reciente
-            mapImage.parentElement.appendChild(pin);
-        });
-
-        function closePopup() {
+        function cerrarPopup() {
             popup.style.display = "none";
+            overlay.style.display = "none";
         }
     </script>
-{% endblock %}
+    
+</body>
+</html>
