@@ -7,7 +7,10 @@ import json
 from django.utils import timezone
 
 def home(request):
-    return render(request, 'home.html')
+    reportes= reporte.objects.filter(completado=False)
+    if not reportes:
+        messages.info(request, "No hay reportes.")
+    return render(request, 'home.html',{'reportes':reportes})
 
 def reportes(request):
     gravedad = request.GET.get('gravedad')
@@ -45,7 +48,7 @@ def crear_reporte(request):
             if request.user.is_authenticated: # Verifica si un usuario esta iniciado
                 request.session['nuevo_reporte']=True
                 return redirect('postlogin')  # Manda notificacion a los usuarios/empleados
-            return redirect('reportes')
+            return redirect('home')
 
 def reporte_(request, id):
     if request.method == 'GET':
@@ -109,10 +112,13 @@ def mapa_piso2(request):
     return render(request, 'mapa/piso2.html',context)
 
 def seleccionar_piso(request):
+    reportes= reporte.objects.filter(completado=False)
+    if not reportes:
+        messages.info(request, "No hay reportes.")
     if request.method=='POST':
         piso=request.POST.get('piso')
         return redirect(f'/piso{piso}')
-    return render(request,'seleccionar_piso.html')
+    return render(request,'seleccionar_piso.html',{'reportes':reportes})
 
 #SISTEMA DE CUENTAS
 def registrar(request):
@@ -120,7 +126,6 @@ def registrar(request):
         form = Registroform(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Usuario creado exitosamente')
             return redirect('postlogin')
     else:
         form = Registroform()

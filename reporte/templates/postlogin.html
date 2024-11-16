@@ -5,77 +5,170 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vista Usuario</title>
     <style>
+        /* reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        /* estilo encabezado */
+        header {
+            text-align: center;
+            padding: 1em 0;
+            background-color: #06068a;
+            color: white;
+        }
+        header h1 {
+            font-size: 2.5rem;
+        }
+
+        .logout {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        .logout-boton {
+            display: inline-block;
+            padding: 0.5em 1em;
+            background-color: #3700ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .logout-boton:hover {
+            background-color: #6848e7;
+        }
+
+        main {
+            display: flex;
+            justify-content: space-between;
+            padding: 1em;
+        }
+        .panel-izq {
+            width: 20%;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+        .button {
+            display: block;
+            text-align: center;
+            padding: 0.5em;
+            background-color: #1a1ad7;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #471def;
+        }
+        .lista {
+            width: 75%;
+            background: white;
+            padding: 1em;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .lista h2 {
+            margin-bottom: 1em;
+            color: #0077b6;
+        }
+        .lista ul {
+            list-style-type: none;
+        }
+        .lista li {
+            margin-bottom: 0.5em;
+            padding: 0.5em;
+            background-color: #f1f9ff;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        /* Estilo del mensaje emergente */
         .mensaje-emergente {
             position: fixed;
             top: 20px;
             right: 20px;
-            background-color: aquamarine;
+            background-color: rgb(232, 192, 31);
             color: white;
             padding: 15px;
             border-radius: 5px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
             z-index: 1000;
         }
+        
+        footer {
+            text-align: center;
+            padding: 1em;
+            background-color: #06068a;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
     </style>
-    <h1>Bienvenido, {{usuario.username}}!</h1>
 </head>
 <body>
-    {%if reportes_nuevos > 0 %}
-        <p>Desde la ultima vez que te conectaste, se han realizado {{reportes_nuevos}} reportes nuevos.</p>
-    {%else%}
-        <p>No se han realizado reportes desde tu última conexión</p>
-    {%endif%}
-    {%if reportes_completados > 0 %}
-        <p>Además, {{reportes_completados}} reportes han sido completados.</p>
-    {%endif%}
-
-    {%if reportes_nuevos %}
-    <div id="mensajeEmergente" class="mensaje-emergente">
-        ¡Se ha hecho un nuevo reporte!
-        <button onclick="ocultarMensaje()">Cerrar</button>
+    <header>
+        <h1>Bienvenido, {{ usuario.username }}!</h1>
+    </header>
+    <div class="logout">
+        <a class="logout-boton" href="#" onclick="document.getElementById('logout-form').submit(); return false;">
+            Cerrar Sesión
+        </a>
+        <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+            {% csrf_token %}
+        </form>
     </div>
-    {%endif%}
-    <nav>
-        <ul>
-            <li>
-                <a href="/seleccionar_piso">Crear reporte</a>
-            </li>
-            <li>
-                <a href="{% url 'piso-1' %}" class="button">Ir a piso -1</a>
-            </li>
-            <li>
-                <a href="{% url 'piso1' %}" class="button">Ir a piso 1</a>
-            </li>
-            <li>
-                <a href="{% url 'piso2' %}" class="button">Ir a piso 2</a>
-            </li>
-            <li>
-            <a href="#" onclick="document.getElementById('logout-form').submit(); return false;">
-                Cerrar Sesión
-            </a>
-            <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
-                {% csrf_token %}
-            </form>
-            </li>
-        </ul>
-    </nav>
+    <main>
+        <aside class="panel-izq">
+            <a href="/seleccionar_piso" class="button">Crear Reporte</a>
+            <a href="{% url 'piso-1' %}" class="button">Ir a piso -1</a>
+            <a href="{% url 'piso1' %}" class="button">Ir a piso 1</a>
+            <a href="{% url 'piso2' %}" class="button">Ir a piso 2</a>     
+        </aside>
+        <div class="lista">
+            <h2>Reportes realizados</h2>
+            <ul>
+                {% for r in r %}
+                    {% if r.completado == False %}
+                        <li>
+                            <a href="{% url 'reporte_' r.id %}">
+                                <h1>{{ r.titulo }}</h1>
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </main>
+    {% if reportes_nuevos %}
+        <div id="mensajeEmergente" class="mensaje-emergente">
+            ¡Se ha hecho un nuevo reporte!
+            <button onclick="ocultarMensaje()">Cerrar</button>
+        </div>
+    {% endif %}
+    <footer>
+        <p>Proyecto Grupo P201GI</p>
+        <p>2024 Biblioteca Nacional</p>
+    </footer>
 
-    <h2>Reportes pendientes</h2>
-    <ul>
-        {% for r in r %}
-            {% if r.completado == False %}
-                <li>
-                    <a href="{% url 'reporte_' r.id %}">
-                        <h1>{{ r.titulo }}</h1>
-                    </a>
-                </li>
-            {% endif %}
-        {% endfor %}
-    </ul>
     <script>
         function ocultarMensaje() {
-            document.getElementById('mensajeEmergente').style.display='none';
+            document.getElementById('mensajeEmergente').style.display = 'none';
         }
-    </script> 
+    </script>
 </body>
 </html>

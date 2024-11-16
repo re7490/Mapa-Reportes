@@ -3,37 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <Title>Mapa de Reportes</Title>
+    <style>
+        /* reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        /* estilo encabezado */
+        header {
+            text-align: center;
+            padding: 1em 0;
+            background-color: #06068a;
+            color: white;
+        }
 
+        header h1 {
+            font-size: 2.5rem;
+        }
+        /* estilo enlace iniciar sesión */
+        .login {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        .button-login {
+            display: inline-block;
+            padding: 0.5em 1em;
+            background-color: #3700ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .button-login:hover {
+            background-color: #6848e7;
+        }
+        /* contenedor principal */
+        main {
+            display: flex;
+            justify-content: space-between;
+            padding: 1em;
+        }
+        /* botones izquierda */
+        .panel-izq {
+            width: 20%;
+            padding: 20px;
+            border-radius: 8px;;
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+        .button {
+            display: block;
+            text-align: center;
+            padding: 0.5em;
+            background-color: #1a1ad7;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #471def;
+        }
+        /* lista reportes a la derecha */
+        .lista {
+            width: 75%;
+            background: white;
+            padding: 1em;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .lista h2 {
+            margin-bottom: 1em;
+            color: #0077b6;
+        }
+        .lista ul {
+            list-style-type: none;
+        }
+        .lista li {
+            margin-bottom: 0.5em;
+            padding: 0.5em;
+            background-color: #f1f9ff;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .reporte-link {
+            text-decoration: none; /* quita subrayado */
+            color: inherit;        /* color texto por defecto */
+            cursor: pointer;       /* mindica que es interactivo */
+            font-size: 18px;
+        }
+        .reporte-link:hover {
+            color: #555;
+        }
+        /* pie de pagina ('creditos') */
+        footer {
+            text-align: center;
+            padding: 1em;
+            background-color: #06068a;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <nav>
-        <ul>
-            <li>
-                <a href="/login">Iniciar Sesion</a>
-            </li>
-            <li>
-                <a href="/seleccionar_piso">crear reporte</a>
-            </li>
-            <li>
-                <a href="/reportes">lista de reportes</a>
-            </li>
-            <li>
+    <header> Mapa de reportes</header>
+    <div class="login">
+        <a href="/login" class="button-login">Iniciar Sesión</a>
+    </div>
+    <main>
+        <aside class="panel-izq">
+                <a href="/seleccionar_piso" class="button">Crear Reporte</a>
                 <a href="{% url 'piso-1' %}" class="button">Ir a piso -1</a>
-            </li>
-            <li>
                 <a href="{% url 'piso1' %}" class="button">Ir a piso 1</a>
-            </li>
-            <li>
-                <a href="{% url 'piso2' %}" class="button">Ir a piso 2</a>
-            </li>           
-        </ul>
-    </nav>
+                <a href="{% url 'piso2' %}" class="button">Ir a piso 2</a>     
+        </aside>
+        <section class="lista">
+            <h2>Lista de Reportes</h2>
+            <ul>
+                {% for reporte in reportes %}
+                    <li>
+                        <a href="{% url 'reporte_' reporte.id %}" class="reporte-link">{{ reporte.titulo }} (piso {{reporte.piso}}): {{ reporte.descripcion }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
     <footer>
-        <p>Biblioteca Nacional</p>
+        <p>Proyecto Grupo P201GI</p>
+        <p>2024 Biblioteca Nacional</p>
     </footer>
     {% block content%}
     {% endblock %}
-    <title>Home</title>
     
 </body>
 </html>
