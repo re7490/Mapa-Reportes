@@ -95,8 +95,17 @@
             border: 1px solid #ddd;
             border-radius: 3px;
         }
+        .reporte-link {
+            text-decoration: none; /* quita subrayado */
+            color: inherit;  /* color texto por defecto */
+            cursor: pointer;  /* indica que es interactivo */
+            font-size: 13px;
+        }
+        .reporte-link:hover {
+            color: #555;
+        }
 
-        /* Estilo del mensaje emergente */
+        /* estilo mensaje emergente */
         .mensaje-emergente {
             position: fixed;
             top: 20px;
@@ -145,7 +154,7 @@
                 {% for r in r %}
                     {% if r.completado == False %}
                         <li>
-                            <a href="{% url 'reporte_' r.id %}">
+                            <a href="{% url 'reporte_' r.id %}" class="reporte-link">
                                 <h1>{{ r.titulo }}</h1>
                             </a>
                         </li>

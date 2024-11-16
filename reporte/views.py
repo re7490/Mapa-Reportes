@@ -8,8 +8,6 @@ from django.utils import timezone
 
 def home(request):
     reportes= reporte.objects.filter(completado=False)
-    if not reportes:
-        messages.info(request, "No hay reportes.")
     return render(request, 'home.html',{'reportes':reportes})
 
 def reportes(request):
@@ -54,12 +52,13 @@ def reporte_(request, id):
     if request.method == 'GET':
         re = get_object_or_404(reporte, pk=id)
         form = reporteForm(instance=re)
-        return render(request, 'reporte_.html', {'r': re, 'form': form})
+        reportes= reporte.objects.filter(completado=False)
+        return render(request, 'reporte_.html', {'r': re, 'form': form,'reportes':reportes})
     else:
         re = get_object_or_404(reporte, pk=id)
         form = reporteForm(request.POST, instance=re)
         form.save()
-        return redirect('reportes')
+        return redirect('home')
 
 #SOLO usuarios podran brorrar o completar el reporte
 @login_required
