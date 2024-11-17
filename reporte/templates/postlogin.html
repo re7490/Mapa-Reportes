@@ -143,6 +143,7 @@
     </div>
     <main>
         <aside class="panel-izq">
+            <a href="/reportes_completados" class="button">Reportes Completados</a>
             <a href="/seleccionar_piso" class="button">Crear Reporte</a>
             <a href="{% url 'piso-1' %}" class="button">Ir a piso -1</a>
             <a href="{% url 'piso1' %}" class="button">Ir a piso 1</a>
@@ -155,7 +156,7 @@
                     {% if r.completado == False %}
                         <li>
                             <a href="{% url 'reporte_' r.id %}" class="reporte-link">
-                                <h1>{{ r.titulo }}</h1>
+                                <h1>{{ r.titulo }} (piso {{r.piso}})</h1>
                             </a>
                         </li>
                     {% endif %}

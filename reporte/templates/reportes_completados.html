@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes Completados</title>
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        /* encabezado */
+        header {
+            text-align: center;
+            padding: 1em 0;
+            background-color: #06068a;
+            color: white;
+        }
+        header h1 {
+            font-size: 2.5rem;
+        }
+
+        /* botón volver */
+        .volver {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        .volver-boton {
+            display: inline-block;
+            padding: 0.5em 1em;
+            background-color: #3700ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .volver-boton:hover {
+            background-color: #6848e7;
+        }
+
+        /* contenido ppal */
+        main {
+            padding: 1em;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #06068a;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            align-items: center;
+        }
+        form label {
+            font-weight: bold;
+        }
+        form select, form button {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        form button {
+            background-color: #06068a;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        form button:hover {
+            background-color: #3700ff;
+        }
+        .limpiar {
+            text-decoration: none; /* quita subrayado */
+            color: inherit;  /* color texto por defecto */
+            cursor: pointer;  /* indica que es interactivo */
+            font-size: 15px;
+        }
+        .limpiar:hover {
+            color: #555;
+        }
+
+        /* footer ('creaditos')*/
+        footer {
+            text-align: center;
+            padding: 1em;
+            background-color: #06068a;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Reportes Completados</h1>
+    </header>
+
+    <div class="volver">
+        <a class="volver-boton" href="{% url 'postlogin' %}">Volver</a>
+    </div>
+
+    <main>
+        <form method="GET" style="margin-bottom: 20px;">
+            <label for="piso">Piso:</label>
+            <select name="piso" id="piso">
+                <option value="" {% if not piso %}selected{% endif %}>Todos</option>
+                <option value="1" {% if piso == "1" %}selected{% endif %}>Piso 1</option>
+                <option value="2" {% if piso == "2" %}selected{% endif %}>Piso 2</option>
+                <option value="3" {% if piso == "3" %}selected{% endif %}>Piso 3</option>
+            </select>
+
+            <label for="gravedad">Gravedad:</label>
+            <select name="gravedad" id="gravedad">
+                <option value="" {% if not gravedad %}selected{% endif %}>Todas</option>
+                <option value="1" {% if gravedad == "1" %}selected{% endif %}>Baja</option>
+                <option value="2" {% if gravedad == "2" %}selected{% endif %}>Media</option>
+                <option value="3" {% if gravedad == "3" %}selected{% endif %}>Alta</option>
+            </select>
+    
+            <label for="urgencia">Urgencia:</label>
+            <select name="urgencia" id="urgencia">
+                <option value="" {% if not urgencia %}selected{% endif %}>Todas</option>
+                <option value="1" {% if urgencia == "1" %}selected{% endif %}>No urgente</option>
+                <option value="2" {% if urgencia == "2" %}selected{% endif %}>Urgente</option>
+                <option value="3" {% if urgencia == "3" %}selected{% endif %}>Crítica</option>
+            </select>
+    
+
+    
+            <button type="submit">Filtrar</button>
+            <a href="{% url 'reportes_completados' %}" style="margin-left: 10px;" class="limpiar">Limpiar Filtros</a>
+        </form>
+    
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Descripción</th>
+                    <th>Piso</th>
+                    <th>Gravedad</th>
+                    <th>Urgencia</th>
+                    <th>Fecha de Completado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reporte in reportes %}
+                <tr>
+                    <td>{{ reporte.titulo }}</td>
+                    <td>{{ reporte.descripcion }}</td>
+                    <td>{{ reporte.piso }}</td>
+                    <td>{{ reporte.get_gravedad_display }}</td>
+                    <td>{{ reporte.get_urgencia_display }}</td>
+                    <td>{{ reporte.fecha_completado|date:"d M Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center;">No hay reportes completados con ese parámetro.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+    
+
+    <footer>
+        <p>Proyecto Grupo P201GI</p>
+        <p>2024 Biblioteca Nacional</p>
+    </footer>
+</body>
+</html>

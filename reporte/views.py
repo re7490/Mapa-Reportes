@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import json
 from django.utils import timezone
+from django.utils.timezone import now
 
 def home(request):
     reportes= reporte.objects.filter(completado=False)
@@ -42,7 +43,6 @@ def crear_reporte(request):
             nuevo_reporte.piso=int(piso)
 
             nuevo_reporte.save()  # Guarda el reporte en la base de datos
-            messages.success(request, "Reporte enviado :)")
             if request.user.is_authenticated: # Verifica si un usuario esta iniciado
                 request.session['nuevo_reporte']=True
                 return redirect('postlogin')  # Manda notificacion a los usuarios/empleados
@@ -66,16 +66,16 @@ def completar_reporte(request, id):
     re = get_object_or_404(reporte, pk=id)
     if request.method == "POST":
         re.completado = True
+        re.fecha_completado = now()
         re.save()
-        return redirect('reportes')
+        return redirect('postlogin')
 
 @login_required
 def borrar_reporte(request, id):
     re = get_object_or_404(reporte, pk=id)
     if request.method == "POST":
         re.delete()
-        return redirect('reportes')
-
+        return redirect('postlogin')
 
 def mapa_piso0(request): #piso -1
     reportes= reporte.objects.filter(completado=False, piso=-1)
@@ -141,3 +141,18 @@ def postlogin(request):
     reportes = reporte.objects.filter(completado=False).order_by('-id') #para mostrar lista de reportes
     context={'usuario':usuario,'reportes_nuevos':reportes_nuevos,'reportes_completados':reportes_completados,'r':reportes,'nuevo_reporte':nuevo_reporte}
     return render(request, 'postlogin.html', context)
+
+@login_required
+def lista_reportes_completados(request):
+    piso = request.GET.get('piso', None)
+    urgencia = request.GET.get('urgencia', None)
+    gravedad = request.GET.get('gravedad', None)
+    reportes_completados = reporte.objects.filter(completado=True)
+    if piso:
+        reportes_completados = reportes_completados.filter(piso=piso)
+    if urgencia:
+        reportes_completados = reportes_completados.filter(urgencia=urgencia)
+    if gravedad:
+        reportes_completados = reportes_completados.filter(gravedad=gravedad)
+    reportes_completados = reportes_completados.order_by('-fecha_completado')
+    return render(request, 'reportes_completados.html', {'reportes': reportes_completados,'piso': piso,'urgencia': urgencia,'gravedad': gravedad,})
