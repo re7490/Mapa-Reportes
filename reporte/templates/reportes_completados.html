@@ -115,7 +115,7 @@
             color: #555;
         }
 
-        /* footer ('creaditos')*/
+        /* footer ('creditos')*/
         footer {
             text-align: center;
             padding: 1em;
@@ -141,9 +141,9 @@
             <label for="piso">Piso:</label>
             <select name="piso" id="piso">
                 <option value="" {% if not piso %}selected{% endif %}>Todos</option>
+                <option value="-1" {% if piso == "-1" %}selected{% endif %}>Piso -1</option>
                 <option value="1" {% if piso == "1" %}selected{% endif %}>Piso 1</option>
                 <option value="2" {% if piso == "2" %}selected{% endif %}>Piso 2</option>
-                <option value="3" {% if piso == "3" %}selected{% endif %}>Piso 3</option>
             </select>
 
             <label for="gravedad">Gravedad:</label>
@@ -197,8 +197,6 @@
             </tbody>
         </table>
     </main>
-    
-
     <footer>
         <p>Proyecto Grupo P201GI</p>
         <p>2024 Biblioteca Nacional</p>

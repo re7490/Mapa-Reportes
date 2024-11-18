@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Usuarios</title>
+    <style>
+        /* reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        header {
+            text-align: center;
+            padding: 1em 0;
+            background-color: #06068a;
+            color: white;
+        }
+        header h1 {
+            font-size: 2.5rem;
+        }
+
+        .volver {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        .volver-boton {
+            display: inline-block;
+            padding: 0.5em 1em;
+            background-color: #3700ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .volver-boton:hover {
+            background-color: #6848e7;
+        }
+
+        main {
+            padding: 1em;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #06068a;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-staff {
+            background-color: #28a745;
+        }
+        .btn-staff:hover {
+            background-color: #218838;
+        }
+        .btn-quit {
+            background-color: #ff9800;
+        }
+        .btn-quit:hover {
+            background-color: #e68a00;
+        }
+        .btn-delete {
+            background-color: #f44336;
+        }
+        .btn-delete:hover {
+            background-color: #d32f2f;
+        }
+        footer {
+            text-align: center;
+            padding: 1em;
+            background-color: #06068a;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Administrar Usuarios</h1>
+    </header>
+
+    <div class="volver">
+        <a class="volver-boton" href="{% url 'postlogin' %}">Volver</a>
+    </div>
+
+    <main>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre de Usuario</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario.username }}</td>
+                    <td>
+                        <form method="POST" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ usuario.id }}">
+                            {% if usuario.is_staff %}
+                                <input type="hidden" name="accion" value="quitar_staff">
+                                <button type="submit" class="btn btn-quit">Quitar Staff</button>
+                            {% else %}
+                                <input type="hidden" name="accion" value="hacer_staff">
+                                <button type="submit" class="btn btn-staff">Hacer Staff</button>
+                            {% endif %}
+                        </form>
+                        
+                        <form method="POST" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ usuario.id }}">
+                            <input type="hidden" name="accion" value="eliminar_usuario">
+                            <button type="submit" class="btn btn-delete">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <p>Proyecto Grupo P201GI</p>
+        <p>2024 Biblioteca Nacional</p>
+    </footer>
+</body>
+</html>

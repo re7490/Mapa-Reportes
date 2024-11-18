@@ -15,9 +15,10 @@ class reporteForm(ModelForm):
         }
 
 class Registroform(UserCreationForm):
+    llave = forms.CharField(max_length=100, required=True, help_text="Ingresa la llave de empleado")
     class Meta:
         model=User
-        fields=['username','password1','password2']
+        fields=['username','password1','password2','llave']
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].widget.attrs.update({'espacio':'nombre usuario'})
@@ -26,3 +27,9 @@ class Registroform(UserCreationForm):
         self.fields['password2'].label = "Confirmar contraseña"
         self.fields['password1'].help_text = None
         self.fields['password2'].help_text = None
+        
+    def clean_llave(self):
+        llave = self.cleaned_data.get('llave')
+        if llave != 'clave-empleado':
+            raise forms.ValidationError('La llave proporcionada no es válida.')
+        return llave

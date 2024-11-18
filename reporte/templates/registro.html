@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrarse</title>
+    <title>Registro de Empleado</title>
     <style>
         * {
             margin: 0;
@@ -147,6 +147,21 @@
                     <label for="password2">Confirmar contraseña:</label>
                     <input type="password" name="password2" id="password2" required>
                 </div>
+                <div class="formulario">
+                    <label for="llave">Llave de empleado:</label>
+                    <input type="text" name="llave" id="llave" value="{{ form.llave.value|default:'' }}" required>
+                </div>
+                {% if form.errors %}
+                <div class="form-errors">
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
                 <button type="submit" class="boton">Registrarse</button>
             </form>
             <a href="{% url 'login' %}" class="registro-link">¿Ya tienes cuenta? Inicia sesión</a>

@@ -77,6 +77,22 @@
             border-radius: 50%;
             transform: translate(-50%, -50%); /* Centra el pin */
         }
+        /* estilo tooltip */
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 4, 255, 0.781);
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 12px;
+            display: none;
+            pointer-events: none;
+            z-index: 100;
+            white-space: nowrap;
+            transform: translate(-50%, -100%); /* coloca tooltip sobre pin */
+            margin-bottom: 5px; /* añade pequeño espacio entre pin y tooltip */
+        }
+
         #popup {
             display: none;
             position: fixed;
@@ -172,35 +188,52 @@
     
         //para asegurarse q la imagen cargo antes del pin
         mapa.addEventListener("load", function() {
-            //poner pines de reportes activos
+            // Crear y agregar tooltips a los pines de reportes activos
             reportes.forEach(reporte => {
                 const marcador = document.createElement("div");
                 marcador.className = "marcador";
                 marcador.style.left = `${(reporte.x / mapa.naturalWidth) * 100}%`;
                 marcador.style.top = `${(reporte.y / mapa.naturalHeight) * 100}%`;
+                
+                // Crear el tooltip
+                const tooltip = document.createElement("div");
+                tooltip.className = "tooltip";
+                tooltip.textContent = reporte.titulo; // Título del reporte
+                marcador.appendChild(tooltip);
+                
+                // Mostrar tooltip cuando el mouse pasa sobre el marcador
+                marcador.addEventListener("mouseover", function() {
+                    tooltip.style.display = "block";
+                });
+                
+                // Ocultar el tooltip cuando el mouse sale del marcador
+                marcador.addEventListener("mouseout", function() {
+                    tooltip.style.display = "none";
+                });
+
                 mapa.parentElement.appendChild(marcador);
             });
-    
-            //crea nuevo pin al hacer clic en mapa
+
+            // Crea un nuevo pin al hacer clic en el mapa
             mapa.addEventListener("click", function(event) {
                 const naturalWidth = mapa.naturalWidth;
-                const naturalHeight = mapa.naturalHeight; //dimensiones mapa sin escalar (original)
-    
-                //dimensiones imagen mapa en pantalla
+                const naturalHeight = mapa.naturalHeight; // Dimensiones originales del mapa
+            
+                // Dimensiones de la imagen del mapa en la pantalla
                 const rect = mapa.getBoundingClientRect();
-                //coordenadas clic en mapa escalado
+                // Coordenadas del clic en el mapa escalado
                 const clickX = event.clientX - rect.left;
                 const clickY = event.clientY - rect.top;
-    
-                //ajuste coordenadas a dimensiones originales
+            
+                // Ajustar las coordenadas a las dimensiones originales
                 const x = (clickX / rect.width) * naturalWidth;
                 const y = (clickY / rect.height) * naturalHeight;
-    
-                // Deja el pin más reciente
+            
+                // Eliminar el marcador temporal anterior
                 const marcadorExistente = document.querySelector('.marcador-temporal');
                 if (marcadorExistente) marcadorExistente.remove();
-    
-                // Crear y colocar el nuevo pin temporal
+            
+                // Crear y colocar un nuevo marcador temporal
                 const marcador = document.createElement("div");
                 marcador.className = "marcador marcador-temporal";
                 marcador.style.left = `${(x / naturalWidth) * 100}%`;
@@ -209,12 +242,13 @@
 
                 xInput.value = x;
                 yInput.value = y;
-    
+            
                 // Mostrar el popup y el overlay
                 popup.style.display = "block";
                 overlay.style.display = "block";
             });
         });
+
 
         function cerrarPopup() {
             popup.style.display = "none";

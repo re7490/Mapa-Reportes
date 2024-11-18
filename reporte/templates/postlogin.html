@@ -143,6 +143,11 @@
     </div>
     <main>
         <aside class="panel-izq">
+            {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                    <a href="{% url 'administrar_usuarios' %}" class="button">Administrar usuarios</a>
+                {% endif %}
+            {% endif %}
             <a href="/reportes_completados" class="button">Reportes Completados</a>
             <a href="/seleccionar_piso" class="button">Crear Reporte</a>
             <a href="{% url 'piso-1' %}" class="button">Ir a piso -1</a>

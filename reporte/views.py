@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 import json
 from django.utils import timezone
 from django.utils.timezone import now
+from django.contrib.auth.models import User
 
 def home(request):
     reportes= reporte.objects.filter(completado=False)
@@ -125,7 +126,9 @@ def registrar(request):
         form = Registroform(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('postlogin')
+            return redirect('login')
+        else:
+            messages.error(request, "La llave proporcionada no es válida.")
     else:
         form = Registroform()
     return render(request, 'registro.html', {'form': form})
@@ -156,3 +159,46 @@ def lista_reportes_completados(request):
         reportes_completados = reportes_completados.filter(gravedad=gravedad)
     reportes_completados = reportes_completados.order_by('-fecha_completado')
     return render(request, 'reportes_completados.html', {'reportes': reportes_completados,'piso': piso,'urgencia': urgencia,'gravedad': gravedad,})
+
+@login_required
+def administrar_usuarios(request):
+    if not request.user.is_staff:
+        return redirect('home')  # Solo usuarios con permisos de staff pueden acceder
+
+    usuarios = User.objects.all()
+
+    if request.method == 'POST':
+        accion = request.POST.get('accion')
+        user_id = request.POST.get('user_id')
+
+        try:
+            usuario = User.objects.get(id=user_id)
+            if accion == 'hacer_staff':
+                usuario.is_staff = True
+                usuario.save()
+                messages.success(request, f"El usuario {usuario.username} ahora tiene permisos de staff.")
+            elif accion == 'quitar_staff':
+                usuario.is_staff = False
+                usuario.save()
+                messages.success(request, f"El usuario {usuario.username} ya no tiene permisos de staff.")
+            elif accion == 'eliminar_usuario':
+                usuario.delete()
+                messages.success(request, f"El usuario {usuario.username} ha sido eliminado.")
+        except User.DoesNotExist:
+            messages.error(request, "Usuario no encontrado.")
+
+    return render(request, 'administrar_usuarios.html', {'usuarios': usuarios})
+
+@login_required
+def eliminar_usuario(request, user_id):
+    if not request.user.is_staff:
+        return redirect('home')  # Redirigir si no es admin
+
+    try:
+        usuario = User.objects.get(id=user_id)
+        usuario.delete()
+        messages.success(request, f"El usuario {usuario.username} ha sido eliminado.")
+    except User.DoesNotExist:
+        messages.error(request, "El usuario no existe.")
+    
+    return redirect('administrar_usuarios') 
