@@ -8,67 +8,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elegir Piso</title>
     <style>
-        .contenedor-centro {
+        .botones-pisos {
             display: flex;
+            flex-direction: column; /* Mensaje arriba, botones abajo */
             justify-content: center;
-            align-items: flex-start; 
-            height: calc(100vh - 200px); 
-            padding-top: 50px; 
+            align-items: center; /* Centra el contenido horizontalmente */
+            margin-top: 20px;
         }
-
-        .form-container {
-            text-align: center;
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            width: 400px; 
-        }
-
-        .form-container label {
-            display: block;
-            margin-bottom: 30px;
-            font-size: 18px;
+    
+        .mensaje-botones {
+            font-size: 16px;
             font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px; /* Espacio entre el mensaje y los botones */
         }
-        .panel-izq {
-            display: flex;
-            flex-direction: column;
-            gap: 20px; 
-            align-items: center; 
+    
+        .botones-horizontales {
+            display: flex; /* Alinea los botones en una fila */
+            justify-content: center;
+            gap: 20px; /* Espaciado entre los botones */
         }
-
-        .button {
-            display: block;
+    
+        .botones-horizontales .button-piso {
             text-align: center;
             padding: 10px 20px;
-            background-color: #1a1ad7;
+            background-color: #554d43;
             color: white;
             text-decoration: none;
             border-radius: 5px;
             font-weight: bold;
             transition: background-color 0.3s ease;
-            width: 200px; 
         }
-
-        .button:hover {
-            background-color: #471def;
+    
+        .botones-horizontales .button-piso:hover {
+            background-color: #8a847d;
         }
     </style>
+    
 </head>
 <body>
-    <div class="contenedor-centro">
-        <form method="post">
-            {% csrf_token %}
-            <label>Selecciona el piso donde quieres hacer el reporte:</label>
-            <div class="panel-izq">
-                <a href="{% url 'piso-1' %}" class="button">Piso -1</a>
-                <a href="{% url 'piso1' %}" class="button">Piso 1</a>
-                <a href="{% url 'piso2' %}" class="button">Piso 2</a>
-            </div>
-        </form>
+    <div class="botones-pisos">
+        <p class="mensaje-botones">Selecciona el piso donde quieres hacer el reporte</p>
+        <div class="botones-horizontales">
+            <a href="{% url 'piso-1' %}" class="button-piso">Piso -1</a>
+            <a href="{% url 'piso1' %}" class="button-piso">Piso 1</a>
+            <a href="{% url 'piso2' %}" class="button-piso">Piso 2</a>
+        </div>
     </div>
-    <div class="lista">
+    <!--<div class="lista">
         <h2>Reportes realizados</h2>
         <ul>
             {% for r in reportes %}
@@ -81,7 +69,7 @@
                 <li>No hay reportes pendientes</li>
             {% endfor %}
         </ul>
-    </div>
+    </div>-->
     
 </body>
 </html>

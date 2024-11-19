@@ -21,7 +21,7 @@
         header {
             text-align: center;
             padding: 1em 0;
-            background-color: #06068a;
+            background-color: #35495e;
             color: white;
         }
         header h1 {
@@ -36,7 +36,7 @@
         .logout-boton {
             display: inline-block;
             padding: 0.5em 1em;
-            background-color: #3700ff;
+            background-color: #554d43;
             color: white;
             text-decoration: none;
             border-radius: 5px;
@@ -44,7 +44,7 @@
             transition: background-color 0.3s ease;
         }
         .logout-boton:hover {
-            background-color: #6848e7;
+            background-color: #8a847d;
         }
 
         main {
@@ -64,7 +64,7 @@
             display: block;
             text-align: center;
             padding: 0.5em;
-            background-color: #1a1ad7;
+            background-color: #554d43;
             color: white;
             text-decoration: none;
             border-radius: 5px;
@@ -72,7 +72,7 @@
             transition: background-color 0.3s ease;
         }
         .button:hover {
-            background-color: #471def;
+            background-color: #8a847d;
         }
         .lista {
             width: 75%;
@@ -83,7 +83,7 @@
         }
         .lista h2 {
             margin-bottom: 1em;
-            color: #0077b6;
+            color: #35495e;
         }
         .lista ul {
             list-style-type: none;
@@ -110,7 +110,7 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background-color: rgb(232, 192, 31);
+            background-color: rgb(232, 199, 31);
             color: white;
             padding: 15px;
             border-radius: 5px;
@@ -121,7 +121,7 @@
         footer {
             text-align: center;
             padding: 1em;
-            background-color: #06068a;
+            background-color: #35495e;
             color: white;
             position: fixed;
             bottom: 0;
@@ -149,7 +149,6 @@
                 {% endif %}
             {% endif %}
             <a href="/reportes_completados" class="button">Reportes Completados</a>
-            <a href="/seleccionar_piso" class="button">Crear Reporte</a>
             <a href="{% url 'piso-1' %}" class="button">Ir a piso -1</a>
             <a href="{% url 'piso1' %}" class="button">Ir a piso 1</a>
             <a href="{% url 'piso2' %}" class="button">Ir a piso 2</a>     
@@ -176,8 +175,7 @@
         </div>
     {% endif %}
     <footer>
-        <p>Proyecto Grupo P201GI</p>
-        <p>2024 Biblioteca Nacional</p>
+        <p>Proyecto Grupo P201E3GI  -  2024 Biblioteca Nacional</p>
     </footer>
 
     <script>

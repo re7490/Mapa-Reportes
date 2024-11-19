@@ -21,7 +21,7 @@
         header {
             text-align: center;
             padding: 1em 0;
-            background-color: #06068a;
+            background-color: #35495e;
             color: white;
         }
 
@@ -34,19 +34,60 @@
             top: 10px;
             right: 20px;
         }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
         .button-login {
             display: inline-block;
             padding: 0.5em 1em;
-            background-color: #3700ff;
+            background-color: #554d43;
             color: white;
             text-decoration: none;
             border-radius: 5px;
             font-weight: bold;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+            border: none;
         }
+
         .button-login:hover {
-            background-color: #6848e7;
+            background-color: #8a847d;
+            transform: scale(1.05);
         }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%; /* Justo debajo del botón */
+            left: -60px; /* Ajuste hacia la izquierda */
+            background-color: white;
+            min-width: 130px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 16px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #8a847d;
+            color: white;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
         /* contenedor principal */
         main {
             display: flex;
@@ -66,7 +107,7 @@
             display: block;
             text-align: center;
             padding: 0.5em;
-            background-color: #1a1ad7;
+            background-color: #554d43; /*color boton*/
             color: white;
             text-decoration: none;
             border-radius: 5px;
@@ -74,7 +115,7 @@
             transition: background-color 0.3s ease;
         }
         .button:hover {
-            background-color: #471def;
+            background-color: #8a847d ; /*color boton al pasar el mouse x encima*/
         }
         /* lista reportes a la derecha */
         .lista {
@@ -86,7 +127,7 @@
         }
         .lista h2 {
             margin-bottom: 1em;
-            color: #0077b6;
+            color: #35495e;
         }
         .lista ul {
             list-style-type: none;
@@ -111,7 +152,7 @@
         footer {
             text-align: center;
             padding: 1em;
-            background-color: #06068a;
+            background-color: #35495e;
             color: white;
             position: fixed;
             bottom: 0;
@@ -122,7 +163,13 @@
 <body>
     <header> Mapa de reportes</header>
     <div class="login">
-        <a href="/login" class="button-login">Iniciar Sesión</a>
+        <div class="dropdown">
+            <button class="button-login">Cuenta</button>
+            <div class="dropdown-content">
+                <a href="/login" class="dropdown-link">Iniciar Sesión</a>
+                <a href="/registro" class="dropdown-link">Crear Cuenta</a>
+            </div>
+        </div>
     </div>
     <main>
         <aside class="panel-izq">
@@ -143,8 +190,7 @@
         </section>
     </main>
     <footer>
-        <p>Proyecto Grupo P201GI</p>
-        <p>2024 Biblioteca Nacional</p>
+        <p>Proyecto Grupo P201E3GI  -  2024 Biblioteca Nacional</p>
     </footer>
     {% block content%}
     {% endblock %}
