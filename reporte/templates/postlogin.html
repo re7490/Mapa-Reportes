@@ -108,16 +108,25 @@
         /* estilo mensaje emergente */
         .mensaje-emergente {
             position: fixed;
-            top: 20px;
+            top: 70px;
             right: 20px;
-            background-color: rgb(232, 199, 31);
+            background-color: #b32821;
             color: white;
             padding: 15px;
             border-radius: 5px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
             z-index: 1000;
         }
-        
+        .cerrar {
+            background-color: #d9a8a8 ;
+            cursor: pointer;
+            text-decoration: none;
+            color: rgb(0, 0, 0);
+            padding: 7px;
+            border-radius: 5px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+                
         footer {
             text-align: center;
             padding: 1em;
@@ -171,7 +180,7 @@
     {% if reportes_nuevos %}
         <div id="mensajeEmergente" class="mensaje-emergente">
             ¡Se ha hecho un nuevo reporte!
-            <button onclick="ocultarMensaje()">Cerrar</button>
+            <a onclick="ocultarMensaje()" class="cerrar">Cerrar</a>
         </div>
     {% endif %}
     <footer>
