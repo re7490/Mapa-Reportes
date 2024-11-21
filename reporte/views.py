@@ -7,6 +7,7 @@ import json
 from django.utils import timezone
 from django.utils.timezone import now
 from django.contrib.auth.models import User
+from django.http import HttpResponseForbidden
 
 def home(request):
     reportes= reporte.objects.filter(completado=False)
@@ -163,7 +164,7 @@ def lista_reportes_completados(request):
 @login_required
 def administrar_usuarios(request):
     if not request.user.is_staff:
-        return redirect('home')  # Solo usuarios con permisos de staff pueden acceder
+        return redirect('home')  # solo usuarios con permisos de staff pueden acceder
 
     usuarios = User.objects.all()
 
@@ -173,6 +174,11 @@ def administrar_usuarios(request):
 
         try:
             usuario = User.objects.get(id=user_id)
+            usuario_actual = request.user
+            if usuario.is_superuser:
+                return HttpResponseForbidden("No pudes modificar un administrador.")
+            if usuario==usuario_actual and usuario_actual.is_staff:
+                return HttpResponseForbidden("No puedes modificarte a ti mismo.")
             if accion == 'hacer_staff':
                 usuario.is_staff = True
                 usuario.save()

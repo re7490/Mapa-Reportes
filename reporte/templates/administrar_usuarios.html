@@ -135,6 +135,7 @@
                 <tr>
                     <td>{{ usuario.username }}</td>
                     <td>
+                        {% if usuario != request.user and not usuario.is_superuser %}
                         <form method="POST" style="display: inline;">
                             {% csrf_token %}
                             <input type="hidden" name="user_id" value="{{ usuario.id }}">
@@ -153,7 +154,13 @@
                             <input type="hidden" name="accion" value="eliminar_usuario">
                             <button type="submit" class="btn btn-delete">Eliminar</button>
                         </form>
-                    </td>
+                        {% else %}
+                            {% if usuario.is_superuser %}
+                                    <span>Administrador protegido</span>
+                                {% else %}
+                                    <span>No puedes modificarte a ti mismo</span>
+                                {% endif %}
+                        {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>

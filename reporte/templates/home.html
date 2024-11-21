@@ -31,7 +31,7 @@
         /* estilo enlace iniciar sesión */
         .login {
             position: absolute;
-            top: 10px;
+            top: 20px;
             right: 20px;
         }
 
@@ -51,6 +51,7 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
             cursor: pointer;
             border: none;
+            font-size: 18px;
         }
 
         .button-login:hover {
@@ -61,8 +62,8 @@
         .dropdown-content {
             display: none;
             position: absolute;
-            top: 100%; /* Justo debajo del botón */
-            left: -60px; /* Ajuste hacia la izquierda */
+            top: 100%; /* justo debajo del botón */
+            left: -60px; /* ajuste hacia la izquierda */
             background-color: white;
             min-width: 130px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -161,7 +162,9 @@
     </style>
 </head>
 <body>
-    <header> Mapa de reportes</header>
+    <header>
+        <h1>Mapa de reportes</h1>
+    </header>
     <div class="login">
         <div class="dropdown">
             <button class="button-login">Cuenta</button>
