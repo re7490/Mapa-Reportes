@@ -11,7 +11,10 @@
             padding: 0;
             box-sizing: border-box;
         }
-        body {
+        html, body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
             font-family: Arial, sans-serif;
             line-height: 1.6;
             background-color: #f4f4f9;
@@ -50,9 +53,11 @@
 
         /* contenido ppal */
         main {
+            flex: 1;
             padding: 1em;
             max-width: 1200px;
             margin: auto;
+            margin-bottom: 60px;
         }
 
         table {
@@ -121,7 +126,7 @@
             padding: 1em;
             background-color: #35495e;
             color: white;
-            position: fixed;
+            position: sticky;
             bottom: 0;
             width: 100%;
         }

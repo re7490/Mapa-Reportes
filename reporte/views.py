@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
 
 def home(request):
-    reportes= reporte.objects.filter(completado=False)
+    reportes= reporte.objects.filter(completado=False).order_by('-gravedad', '-urgencia')
     return render(request, 'home.html',{'reportes':reportes})
 
 def reportes(request):
@@ -142,7 +142,7 @@ def postlogin(request):
     reportes_nuevos=reporte.objects.filter(fecha__gt=ultima_conexion).count()
     reportes_completados=reporte.objects.filter(completado=True,fecha_completado__gt=ultima_conexion).count()
     nuevo_reporte=request.session.pop('nuevo_reporte',False) # Ve si hay nuevo reporte
-    reportes = reporte.objects.filter(completado=False).order_by('-id') #para mostrar lista de reportes
+    reportes = reporte.objects.filter(completado=False).order_by('-gravedad', '-urgencia') #para mostrar lista de reportes
     context={'usuario':usuario,'reportes_nuevos':reportes_nuevos,'reportes_completados':reportes_completados,'r':reportes,'nuevo_reporte':nuevo_reporte}
     return render(request, 'postlogin.html', context)
 
