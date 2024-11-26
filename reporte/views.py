@@ -113,7 +113,7 @@ def mapa_piso2(request):
     return render(request, 'mapa/piso2.html',context)
 
 def seleccionar_piso(request):
-    reportes= reporte.objects.filter(completado=False)
+    reportes= reporte.objects.filter(completado=False).order_by('-gravedad','-urgencia')
     if not reportes:
         messages.info(request, "No hay reportes.")
     if request.method=='POST':
